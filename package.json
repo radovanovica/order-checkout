@@ -1,0 +1,20 @@
+{
+  "name": "checkout-microservices",
+  "version": "1.0.0",
+  "description": "Microservices project for checkout system",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "start:audit-service": "node services/audit-service/src/index.js",
+    "start:checkout-service": "node services/checkout-service/src/index.js",
+    "start:inventory-service": "node services/inventory-service/src/index.js",
+    "start:notification-service": "node services/notification-service/src/index.js",
+    "start:payment-service": "node services/payment-service/src/index.js",
+    "start:stock-cache-service": "node services/stock-cache-service/src/index.js",
+    "start:validation-service": "node services/validation-service/src/index.js",
+    "start:all": "npm-run-all --parallel start:audit-service start:checkout-service start:inventory-service start:notification-service start:payment-service start:stock-cache-service start:validation-service"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
