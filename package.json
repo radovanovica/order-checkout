@@ -15,6 +15,9 @@
     "start:all": "npm-run-all --parallel start:audit-service start:checkout-service start:inventory-service start:notification-service start:payment-service start:stock-cache-service start:validation-service"
   },
   "dependencies": {
-    "express": "^4.18.2"
+    "axios": "^1.9.0",
+    "common-libs": "file:./common-libs",
+    "express": "^4.18.2",
+    "kafkajs": "^2.2.4"
   }
 }
