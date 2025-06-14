@@ -1,6 +1,7 @@
 // validation-service/src/index.js
 const express = require('express');
 const bodyParser = require('body-parser');
+const axios = require('axios');
 const app = express();
 const PORT = process.env.PORT || 3002;
 
@@ -12,17 +13,24 @@ app.get('/health', (req, res) => {
 });
 
 // Validation endpoint - validate business rules for the cart
-app.post('/validate', (req, res) => {
-  const cart = req.body;
-  // Mock validation logic
-  const allItemsValid= cart.items?.every(item => item.price > 0 && item.quantity <= 5);
+app.post('/validate', async (req, res) => {
+  const requestBody = req.body;
+  try {
+    // Call stock-cache service to validate items
+    const response = await axios.post('http://localhost:3003/check-items', {
+      items: requestBody?.cart?.items ?? [],
+      promoCodes: requestBody?.cart?.promoCodes ?? []
+    });
 
-  if (!allItemsValid) {
-    return res.status(200).json({ valid: false, message: 'Invalid items in cart' });
+    if (!response.data.valid) {
+      return res.status(400).json({ valid: false, message: response.data.message });
+    }
+
+    return res.status(200).json({ valid: true, discount: response.data.discount });
+  } catch (error) {
+    console.error('Error validating items:', error);
+    res.status(500).json({ error: 'Validation service failed' });
   }
-
-  // Mock successful validation
-  return res.status(200).json({ valid: true });
 });
 
 app.listen(PORT, () => {
