@@ -1,14 +1,15 @@
 // payment-service/src/index.js
 const express = require('express');
 const axios = require('axios');
-const { emitKafkaEvent } = require('common/kafka/producer');
-const { createKafkaConsumer } = require('common/kafka/consumer');
+const { emitKafkaEvent } = require('common-libs/kafka/producer');
+const { createKafkaConsumer } = require('common-libs/kafka/consumer');
 
 const app = express();
 const PORT = process.env.PORT || 3004;
 
 // Mock payment processing function
-async function processPayment(order) {
+async function processPayment(paymentData) {
+  order = paymentData?.order?.cart
   try {
     // Simulate calling an external payment API
     const response = await axios.post('http://localhost:3007/api/pay', {
