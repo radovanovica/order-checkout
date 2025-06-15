@@ -23,7 +23,7 @@ app.post('/validate', async (req, res) => {
     });
 
     if (!response.data.valid) {
-      return res.status(400).json({ valid: false, message: response.data.message });
+      return res.status(200).json({ valid: false, message: response.data.message });
     }
 
     return res.status(200).json({ valid: true, discount: response.data.discount });

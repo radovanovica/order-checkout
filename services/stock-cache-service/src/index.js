@@ -27,16 +27,14 @@ async function startKafkaConsumer() {
 
 // Endpoint to check items and discounts by promo code
 app.post('/check-items', async (req, res) => {
-  debugger
   const { items, promoCodes } = req.body;
-
   try {
     // Mock logic to validate items and calculate discounts
     const validItems = items.every(item => item.quantity > 0 && item.quantity < 100 && item.price > 0);
     const discount = promoCodes?.includes('PROMO10') ? 0.1 : 0;
 
     if (!validItems) {
-      return res.status(400).json({ valid: false, message: 'Invalid items' });
+      return res.status(200).json({ valid: false, message: 'Insufficient number of items in stock' });
     }
 
     const totalDiscount = items.reduce((acc, item) => acc + item.price * item.quantity * discount, 0);
