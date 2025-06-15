@@ -36,6 +36,10 @@ app.post('/checkout', async (req, res) => {
     // Validate cart items and promo codes
     const validationResult = await validateCart(cart);
     if (!validationResult.valid || !requestValidationResult?.valid) {
+      await emitKafkaEvent('order.failed', {
+        orderId: cart.id,
+        reason: validationResult.message || requestValidationResult.message || 'Validation failed'
+      });
       return res.status(400).json({ error: validationResult.message });
     }
 
