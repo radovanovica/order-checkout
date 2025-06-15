@@ -9,34 +9,47 @@ const PORT = process.env.PORT || 3004;
 
 // Mock payment processing function
 async function processPayment(paymentData) {
-  order = paymentData?.order?.cart
-  try {
-    // Simulate calling an external payment API
-    const response = await axios.post('http://localhost:3007/api/pay', {
-      orderId: order.id,
-      amount: order?.cart?.totalAmount,
-      currency: 'EUR',
-      method: 'credit_card',
-      customer: {
-        name: order?.customer?.name || 'Test User',
-        email: order?.customer?.email || 'test@example.com'
-      }
-    });
+  const order = paymentData?.order?.cart;
+  const maxRetries = 3;
+  let attempt = 0;
 
-    if (response.data.status === 'authorized') {
-      await emitKafkaEvent('payment.authorized', { orderId: order.id });
-    } else {
-      await emitKafkaEvent('payment.failed', {
+  while (attempt < maxRetries) {
+    try {
+      // Simulate calling an external payment API
+      const response = await axios.post('http://localhost:3007/api/pay', {
         orderId: order.id,
-        reason: response.data.reason || 'Unknown error'
+        amount: order?.cart?.totalAmount,
+        currency: 'EUR',
+        method: 'credit_card',
+        customer: {
+          name: order?.customer?.name || 'Test User',
+          email: order?.customer?.email || 'test@example.com'
+        }
       });
+
+      if (response.data.status === 'authorized') {
+        await emitKafkaEvent('payment.authorized', { orderId: order.id });
+        return;
+      } else {
+        await emitKafkaEvent('payment.failed', {
+          orderId: order.id,
+          reason: response.data.reason || 'Unknown error'
+        });
+        return;
+      }
+    } catch (error) {
+      console.error(`Attempt ${attempt + 1} failed:`, error.message);
+
+      if (attempt === maxRetries - 1 || !error.isAxiosError || !error.code) {
+        await emitKafkaEvent('payment.failed', {
+          orderId: order.id,
+          reason: 'External provider error'
+        });
+        return;
+      }
+
+      attempt++;
     }
-  } catch (error) {
-    console.error('External payment error:', error.message);
-    await emitKafkaEvent('payment.failed', {
-      orderId: order.id,
-      reason: 'External provider error'
-    });
   }
 }
 
