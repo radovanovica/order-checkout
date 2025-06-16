@@ -23,42 +23,57 @@ When testing endpoints, ensure you provide the correct JSON body in the request.
 - **Checkout Service**:
   ```json
   {
-  "cart": {
-    "items": [{ "productId": "123", "quantity": 2, "price": 10.0 }],
-    "totalAmount": 20.0,
-    "promoCodes":["PROMO10"]
-  },
-  "customer": {"id":10, "name": "John Doe", "email": "john@example.com" }
+    "cart": {
+      "items": [
+        { "productId": "123", "quantity": 2, "price": 10.0 }
+      ],
+      "totalAmount": 20.0,
+      "promoCodes": ["PROMO10"]
+    },
+    "customer": {
+      "id": 10,
+      "name": "John Doe",
+      "email": "john@example.com"
     }
-
+  }
   ```
 
 #### Invalid JSON Body Examples
 
-1. **Missing Required Fields**:
+1. **Invalid quantity amount**:
    ```json
    {
-  "cart": {
-    "items": [{ "productId": "123", "quantity": 120, "price": 10.0 }],
-    "totalAmount": 1200.0,
-    "promoCodes":["PROMO10"]
-  },
-  "customer": {"id":10, "name": "John Doe", "email": "john@example.com" }
-    }
-    
+     "cart": {
+       "items": [
+         { "productId": "123", "quantity": 120, "price": 10.0 }
+       ],
+       "totalAmount": 1200.0,
+       "promoCodes": ["PROMO10"]
+     },
+     "customer": {
+       "id": 10,
+       "name": "John Doe",
+       "email": "john@example.com"
+     }
+   }
    ```
    - **Reason for Failure**: Insufficient number of items in stock.
 
-2. **Invalid Data Types**:
+2. **Missing Required Fields**:
    ```json
    {
-  "cart": {
-    "items": [{ "productId": "123", "quantity": 120, "price": 10.0 }],
-    "totalAmount": 1200.0,
-    "promoCodes":["PROMO10"]
-  },
-  "customer": {"id":10, "name": "John Doe" }
-    }
+     "cart": {
+       "items": [
+         { "productId": "123", "quantity": 120, "price": 10.0 }
+       ],
+       "totalAmount": 1200.0,
+       "promoCodes": ["PROMO10"]
+     },
+     "customer": {
+       "id": 10,
+       "name": "John Doe"
+     }
+   }
    ```
    - **Reason for Failure**: customer.email is a required field.
 
