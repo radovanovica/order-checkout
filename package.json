@@ -12,8 +12,7 @@
     "start:payment-service": "node services/payment-service/src/index.js",
     "start:stock-cache-service": "node services/stock-cache-service/src/index.js",
     "start:validation-service": "node services/validation-service/src/index.js",
-    "start:mock-payment-gateway": "node services/mock-payment-gateway/src/index.js",
-    "start:all": "npm-run-all --parallel start:audit-service start:checkout-service start:inventory-service start:notification-service start:payment-service start:stock-cache-service start:validation-service"
+    "start:mock-payment-gateway": "node services/mock-payment-gateway/src/index.js"
   },
   "dependencies": {
     "axios": "^1.9.0",
