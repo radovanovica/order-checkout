@@ -64,3 +64,8 @@ Logging is centralized using an **Audit Service**, which listens to all business
 - **draw.io**: Utilized for creating architecture diagram
 - **ChatGPT**: Leveraged for brainstorming ideas and problem-solving.
 - **GitHub Copilot**: Assisted in document generation and code suggestions.
+
+## Additional Documentation
+
+- **Architecture Documentation**: The architecture details can be found in `docs/architecture/architecture.md`.
+- **Test Instructions**: Detailed test instructions are available in `docs/test-instructions.md`.
