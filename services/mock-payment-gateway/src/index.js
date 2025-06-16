@@ -1,4 +1,5 @@
 const express = require('express');
+const { processPaymentRequest } = require('./services/paymentService');
 const app = express();
 const PORT = process.env.PORT || 3007;
 
@@ -6,20 +7,13 @@ app.use(express.json());
 
 // Mock payment API
 app.post('/api/pay', (req, res) => {
-  const { orderId, amount, currency, method, customer } = req.body;
+  const result = processPaymentRequest(req.body);
 
-  if (!orderId || !amount || !currency || !method || !customer) {
-    return res.status(400).json({ status: 'failed', reason: 'Invalid request payload' });
+  if (result.status === 'failed') {
+    return res.status(400).json(result);
   }
 
-  // Simulate payment authorization
-  const isAuthorized = Math.random() > 0.2; // 80% chance of success
-
-  if (isAuthorized) {
-    res.status(200).json({ status: 'authorized' });
-  } else {
-    res.status(200).json({ status: 'failed', reason: 'Insufficient funds' });
-  }
+  res.status(200).json(result);
 });
 
 // Health check
