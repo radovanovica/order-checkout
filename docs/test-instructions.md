@@ -13,9 +13,8 @@
    - **Checkout Service**:
      - `POST /checkout` - Submit a checkout request.
 
-### JSON Body for Testing
 
-#### Step 4: Add JSON Body
+4. Add JSON Body
 
 When testing endpoints, ensure you provide the correct JSON body in the request. Below are examples of valid and invalid JSON bodies for testing:
 
