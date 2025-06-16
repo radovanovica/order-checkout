@@ -1,7 +1,8 @@
 // validation-service/src/index.js
 const express = require('express');
 const bodyParser = require('body-parser');
-const axios = require('axios');
+const { validateCartItems } = require('./services/validationService');
+
 const app = express();
 const PORT = process.env.PORT || 3002;
 
@@ -15,18 +16,10 @@ app.get('/health', (req, res) => {
 // Validation endpoint - validate business rules for the cart
 app.post('/validate', async (req, res) => {
   const requestBody = req.body;
+  console.log('Validating cart items:', requestBody.cart);
   try {
-    // Call stock-cache service to validate items
-    const response = await axios.post('http://localhost:3003/check-items', {
-      items: requestBody?.cart?.items ?? [],
-      promoCodes: requestBody?.cart?.promoCodes ?? []
-    });
-
-    if (!response.data.valid) {
-      return res.status(200).json({ valid: false, message: response.data.message });
-    }
-
-    return res.status(200).json({ valid: true, discount: response.data.discount });
+    const result = await validateCartItems(requestBody.cart);
+    res.status(200).json(result);
   } catch (error) {
     console.error('Error validating items:', error);
     res.status(500).json({ error: 'Validation service failed' });
