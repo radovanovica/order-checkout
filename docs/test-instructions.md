@@ -45,6 +45,7 @@ When testing endpoints, ensure you provide the correct JSON body in the request.
   },
   "customer": {"id":10, "name": "John Doe", "email": "john@example.com" }
     }
+    
    ```
    - **Reason for Failure**: Insufficient number of items in stock.
 
